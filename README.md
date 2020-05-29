@@ -1,7 +1,4 @@
 # **Finding Lane Lines on the Road** 
-[![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
-
-<img src="examples/laneLines_thirdPass.jpg" width="480" alt="Combined Image" />
 
 Overview
 ---
@@ -154,9 +151,10 @@ On the second video a continuous yellow line is present at left and a white dash
 [![Alt text](https://github.com/Dynaa/lanelines/blob/master/test_images_output/youtube_yellow_lane.png)](https://www.youtube.com/watch?v=awFEhbWAkmk)
 
 **3. Challenge video:**
-A final video was providing, this one was really challenging for some points. I have to adapt the ROI to use due to curvature of the road. 
+A final video was provided, this one was really challenging for some points. I have to adapt the ROI size to use due some limitations of my pipeline, for exemple impact of curvature of the road. 
 
 [![Alt text](https://github.com/Dynaa/lanelines/blob/master/test_images_output/youtube_challenge.png)](https://youtu.be/onINe6HNWKM)
+
 
 These differents tests allows me to discover the limitations of my pipeline, and give some ideas on the improvements needed to have a more robust and evicient pipeline. 
 
