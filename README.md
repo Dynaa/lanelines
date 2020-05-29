@@ -45,31 +45,37 @@ As we will try to detect yellow lines as well white lines, I choose to convert i
 <img src="https://github.com/Dynaa/lanelines/blob/master/test_images_output_old/gray.jpg" width="480" alt="Grayscaled Image" />
 
 **2. Gaussian Blur**
+
 In order to remove noise, a gaussian blur is applied on the grayscaled image
 
 <img src="https://github.com/Dynaa/lanelines/blob/master/test_images_output_old/gaussian.jpg" width="480" alt="Gaussian Image" />
 
 **3. Canny Edge detection**
+
 A Canny Edge Detector is then applied. 
 
 <img src="https://github.com/Dynaa/lanelines/blob/master/test_images_output_old/canny.jpg" width="480" alt="Canny Edge detection" />
 
 **4. Region of interest**
+
 The image obtained after Canny Edge detection contains edges that are not relevant for our use case. In order to eliminate them, a region of interest is defined. A mask is applied using vertices defining the region to conserve. 
 
 <img src="https://github.com/Dynaa/lanelines/blob/master/test_images_output_old/roi.jpg" width="480" alt="Region of interest" />
 
 **5. Hough transform**
+
 Finally, we apply the OpenCV function HoughLinesP function to find lines in the image. The outuput of this function consist in an array containing the endpoints of all line segments detected by the transform operation. 
 
 <img src="https://github.com/Dynaa/lanelines/blob/master/test_images_output_old/hough.jpg" width="480" alt="Region of interest" />
 
 **6. Merge with orignal image**
+
 To display the result in the original image, I fused the output of Hough transform result with the original image. 
 
 <img src="https://github.com/Dynaa/lanelines/blob/master/test_images_output_old/solidYellowCurve.jpg" width="480" alt="Region of interest" />
 
 **7. drawlines() improvement**
+
 As seen on the previous image, the output of Hough transform don't provide continuous line. In order to endl this issue, I choose to apply a linear regression in order to find the line model that fit the best to the detected line. 
 Endpoint are find by searching extrema such as minimal and maximal pixel coordinates, linked to endpoints detection and image size. 
 
@@ -141,16 +147,19 @@ Test implementation pipeline on videos
 The whole pipepline was tested on 2 videos provided. 
 
 **1. Video1 :**
+
 On the first video a continuous whitle line is present at right and a dashed one at left. The result obtain is not so bad on this situation. 
 
 [![Alt text](https://github.com/Dynaa/lanelines/blob/master/test_images_output/youtube_white_lane.png)](https://youtu.be/oIgQ1tX5zNU)
 
 **2. Video2 :**
+
 On the second video a continuous yellow line is present at left and a white dashed one at right. The result obtain is not so bad on this situation. 
 
 [![Alt text](https://github.com/Dynaa/lanelines/blob/master/test_images_output/youtube_yellow_lane.png)](https://www.youtube.com/watch?v=awFEhbWAkmk)
 
 **3. Challenge video:**
+
 A final video was provided, this one was really challenging for some points. I have to adapt the ROI size to use due some limitations of my pipeline, for exemple impact of curvature of the road. 
 
 [![Alt text](https://github.com/Dynaa/lanelines/blob/master/test_images_output/youtube_challenge.png)](https://youtu.be/onINe6HNWKM)
