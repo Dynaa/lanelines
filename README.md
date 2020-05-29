@@ -15,31 +15,15 @@ To complete the project, two files will be submitted: a file containing project 
 To meet specifications in the project, take a look at the requirements in the [project rubric](https://review.udacity.com/#!/rubrics/322/view)
 
 
-Pipeline
+Project 1 : Finding Lane Lines on the Road
 ---
-Test
+Lane markings are a great information in order to steer an autonous vehicle. In order to be able tu used them, it's necessary to detect them in datas given by sensor. In our case, we will use images provided by a camera mounted on vehicle. 
+This is placed behind the windshield of the car.
+The goal of this project is to define a simple pipeline based on computer vision. At this stage, no machine learning was used. 
+As mention in the lesson, I used the [tool](https://github.com/maunesh/opencv-gui-helper-tool) developed by another student in order to simplify filter parameters  finding.  
 
-
-Creating a Great Writeup
+Setup
 ---
-For this project, a great writeup should provide a detailed response to the "Reflection" section of the [project rubric](https://review.udacity.com/#!/rubrics/322/view). There are three parts to the reflection:
-
-1. Describe the pipeline
-
-2. Identify any shortcomings
-
-3. Suggest possible improvements
-
-We encourage using images in your writeup to demonstrate how your pipeline works.  
-
-All that said, please be concise!  We're not looking for you to write a book here: just a brief description.
-
-You're not required to use markdown for your writeup.  If you use another method please just submit a pdf of your writeup. Here is a link to a [writeup template file](https://github.com/udacity/CarND-LaneLines-P1/blob/master/writeup_template.md). 
-
-
-The Project
----
-
 ## If you have already installed the [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) you should be good to go!   If not, you should install the starter kit to get started on this project. ##
 
 **Step 1:** Set up the [CarND Term1 Starter Kit](https://github.com/udacity/CarND-Term1-Starter-Kit/blob/master/README.md) if you haven't already.
@@ -53,6 +37,14 @@ Jupyter is an Ipython notebook where you can run blocks of code and see results 
 `> jupyter notebook`
 
 A browser window will appear showing the contents of the current directory.  Click on the file called "P1.ipynb".  Another browser window will appear displaying the notebook.  Follow the instructions in the notebook to complete the project.  
+
+
+Pipeline
+---
+1. **Loading image and color space**
+As we will try to detect yellow lines as well white lines, I choose to convert image to grayscale. Thus our pipeline can be applied in both cases. 
+    ![Color convertion](https://github.com/Dynaa/lanelines/blob/master/test_images_output_old/gray.jpg)
+
 
 **Step 3:** Complete the project and submit both the Ipython notebook and the project writeup
 
