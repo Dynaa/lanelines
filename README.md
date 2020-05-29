@@ -156,7 +156,7 @@ On the first video a continuous whitle line is present at right and a dashed one
 
 On the second video a continuous yellow line is present at left and a white dashed one at right. The result obtain is not so bad on this situation. 
 
-[![Alt text](https://github.com/Dynaa/lanelines/blob/master/test_images_output/youtube_yellow_lane.png)](https://www.youtube.com/watch?v=awFEhbWAkmk)
+[![Alt text](https://github.com/Dynaa/lanelines/blob/master/test_images_output/youtube_yellow_line.png)](https://www.youtube.com/watch?v=awFEhbWAkmk)
 
 **3. Challenge video:**
 
