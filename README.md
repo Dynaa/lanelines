@@ -1,4 +1,4 @@
-# **Finding Lane Lines on the Road - My version** 
+# **Finding Lane Lines on the Road** 
 [![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
 
 <img src="examples/laneLines_thirdPass.jpg" width="480" alt="Combined Image" />
@@ -41,13 +41,127 @@ A browser window will appear showing the contents of the current directory.  Cli
 
 Pipeline
 ---
-1. **Loading image and color space**
+**1. Loading image and color space**
+
 As we will try to detect yellow lines as well white lines, I choose to convert image to grayscale. Thus our pipeline can be applied in both cases. 
-    ![Color convertion](https://github.com/Dynaa/lanelines/blob/master/test_images_output_old/gray.jpg)
 
+<img src="https://github.com/Dynaa/lanelines/blob/master/test_images_output_old/gray.jpg" width="480" alt="Grayscaled Image" />
 
-**Step 3:** Complete the project and submit both the Ipython notebook and the project writeup
+**2. Gaussian Blur**
+In order to remove noise, a gaussian blur is applied on the grayscaled image
 
-## How to write a README
-A well written README file can enhance your project and portfolio.  Develop your abilities to create professional README files by completing [this free course](https://www.udacity.com/course/writing-readmes--ud777).
+<img src="https://github.com/Dynaa/lanelines/blob/master/test_images_output_old/gaussian.jpg" width="480" alt="Gaussian Image" />
 
+**3. Canny Edge detection**
+A Canny Edge Detector is then applied. 
+
+<img src="https://github.com/Dynaa/lanelines/blob/master/test_images_output_old/canny.jpg" width="480" alt="Canny Edge detection" />
+
+**4. Region of interest**
+The image obtained after Canny Edge detection contains edges that are not relevant for our use case. In order to eliminate them, a region of interest is defined. A mask is applied using vertices defining the region to conserve. 
+
+<img src="https://github.com/Dynaa/lanelines/blob/master/test_images_output_old/roi.jpg" width="480" alt="Region of interest" />
+
+**5. Hough transform**
+Finally, we apply the OpenCV function HoughLinesP function to find lines in the image. The outuput of this function consist in an array containing the endpoints of all line segments detected by the transform operation. 
+
+<img src="https://github.com/Dynaa/lanelines/blob/master/test_images_output_old/hough.jpg" width="480" alt="Region of interest" />
+
+**6. Merge with orignal image**
+To display the result in the original image, I fused the output of Hough transform result with the original image. 
+
+<img src="https://github.com/Dynaa/lanelines/blob/master/test_images_output_old/solidYellowCurve.jpg" width="480" alt="Region of interest" />
+
+**7. drawlines() improvement**
+As seen on the previous image, the output of Hough transform don't provide continuous line. In order to endl this issue, I choose to apply a linear regression in order to find the line model that fit the best to the detected line. 
+Endpoint are find by searching extrema such as minimal and maximal pixel coordinates, linked to endpoints detection and image size. 
+
+    def draw_lines_improved(img, lines, color=[255, 0, 0], thickness=2): 
+        """
+        As advised, slope will be computed in order to determinate if a segment is part of the left
+        line or part of the right lane
+        """
+        slope_left = []
+        slope_right = []
+        line_left_x = []
+        line_left_y = []
+        line_right_x = []
+        line_right_y = []
+        for line in lines: 
+            for x1,y1,x2,y2 in line: 
+                line_slope = slope(x1,y1,x2,y2)
+                # Testing slope value in order to know if it's a right or left line
+                if ((line_slope<-0.5) and (line_slope>-0.8)): 
+                    # Left case
+                    slope_left.append(line_slope)
+                    line_left_x.append(x1)
+                    line_left_x.append(x2)
+                    line_left_y.append(y1)
+                    line_left_y.append(y2)
+                else :
+                    if ((line_slope>0.5)and (line_slope<0.8)): 
+                        # Right case
+                        slope_right.append(line_slope)
+                        line_right_x.append(x1)
+                        line_right_x.append(x2)
+                        line_right_y.append(y1)
+                        line_right_y.append(y2)
+
+        if(len(line_left_x)>0):         
+            line_left_x = np.array(line_left_x)
+            line_left_y = np.array(line_left_y)
+            x_max_left = np.amax(line_left_x)
+            y_max_left = np.amax(line_left_y)
+            x_min_left = np.amin(line_left_x)
+            y_min_left = np.amin(line_left_y)
+            x_left = np.array(line_left_x)
+            y_left = np.array(line_left_y)
+            model_left = np.polyfit(x_left,y_left, 1)
+            # Giving the left model, determine points to be used for lane drawing
+            x_value_left = int((img.shape[0]-model_left[1])/model_left[0])
+            cv2.line(img, (x_max_left, y_min_left), (x_value_left, img.shape[0]), color=[255, 0, 0], thickness=12)
+
+        if(len(line_right_x)>0):         
+            line_right_x = np.array(line_right_x)
+            line_right_y = np.array(line_right_y)
+            x_max_right = np.amax(line_right_x)
+            y_max_right = np.amax(line_right_y)
+            x_min_right = np.amin(line_right_x)
+            y_min_right = np.amin(line_right_y)
+            x_right = np.array(line_right_x)
+            y_right = np.array(line_right_y)
+            model_right = np.polyfit(x_right,y_right, 1)
+            # Giving the left model, determine points to be used for lane drawing
+            x_value_right = int((img.shape[0]-model_right[1])/model_right[0])
+            cv2.line(img, (x_min_right, y_min_right), (x_value_right, img.shape[0]), color=[255, 0, 0], thickness=12)
+
+In order to determine if outputs of Hough transform belong to left or right line slope values are computed. Line with positive slope are classified as being on the left line, while those with negative value are linked to right line. 
+
+<img src="https://github.com/Dynaa/lanelines/blob/master/test_images_output/solidYellowCurve.jpg" width="480" alt="Region of interest" />
+
+Test implementation pipeline on videos 
+---
+The whole pipepline was tested on 2 videos provided. 
+
+**1. Video1 :**
+On the first video a continuous whitle line is present at right and a dashed one at left. The result obtain is not so bad on this situation. 
+
+[![Alt text](https://github.com/Dynaa/lanelines/blob/master/test_images_output/youtube_white_lane.png)](https://youtu.be/oIgQ1tX5zNU)
+
+**2. Video2 :**
+On the second video a continuous yellow line is present at left and a white dashed one at right. The result obtain is not so bad on this situation. 
+
+[![Alt text](https://github.com/Dynaa/lanelines/blob/master/test_images_output/youtube_yellow_lane.png)](https://www.youtube.com/watch?v=awFEhbWAkmk)
+
+**3. Challenge video:**
+A final video was providing, this one was really challenging for some points. I have to adapt the ROI to use due to curvature of the road. 
+
+[![Alt text](https://github.com/Dynaa/lanelines/blob/master/test_images_output/youtube_challenge.png)](https://youtu.be/onINe6HNWKM)
+
+These differents tests allows me to discover the limitations of my pipeline, and give some ideas on the improvements needed to have a more robust and evicient pipeline. 
+
+Remarks and improvements
+---
+1. Dash line : we observe that dashed line introduce some "lost" of detection, it could be interesting to introduct some tracking step in order to hace "memories" and don't lose line detection. 
+
+2. Curvature : due to curvature line detection based on linear regression seems to be limited. The line can be advantageously fit on more complexe model such as polynomial. 
